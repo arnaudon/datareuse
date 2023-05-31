@@ -1,4 +1,4 @@
-# reuse
+# PyReuse
 Tool to reuse saved computations with various file formats.
 
 

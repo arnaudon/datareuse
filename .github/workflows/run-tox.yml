@@ -36,4 +36,4 @@ jobs:
         fail_ci_if_error: false
         files: ./coverage.xml
         flags: pytest
-        name: "reuse-py310"
+        name: "pyreuse-py310"
