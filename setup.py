@@ -10,7 +10,7 @@ test_require = [
 ]
 
 setup(
-    name="reuse",
+    name="pyreuse",
     author="Alexis Arnaudon",
     author_email="alexis.arnaudon@epfl.ch",
     version="0.0.1",
