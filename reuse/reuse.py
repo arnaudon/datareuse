@@ -1,11 +1,12 @@
-from pathlib import Path
-import pandas as pd
+"""Reuse saved dataset with contextmanager."""
 from contextlib import contextmanager
-import json
+from pathlib import Path
+
+import pandas as pd
 
 
 @contextmanager
-def Reuse(filename, index=True, index_col=None, disable=False):
+def Reuse(filename, disable=False, **kwargs):
     """Context manager to reuse existing data file from previous run.
 
     At the moment, it is saved with pandas in .csv format only.
@@ -19,40 +20,36 @@ def Reuse(filename, index=True, index_col=None, disable=False):
     """
 
     class reuse_data:
+        """reuse class."""
+
         def __init__(self, filename):
             self._filename = filename
-            self._reader = None
-            self._writer = None
+            self._read = None
+            self._write = None
+            self.dispatch_io()
 
-        def dispatch_io(self, filename):
-            if Path(filename).suffix == ".csv":
+        def dispatch_io(self):
+            """dispatch io"""
+            if Path(self._filename).suffix == ".csv":
 
-                def reader(name, args):
-                    return pd.read_csv(name, index_col=index_col)
+                def read(**kwargs):
+                    return pd.read_csv(self._filename, index_col=kwargs.get("index_col", None))
 
-                def writer(data, name):
-                    data.to_csv(name, index=index)
-
-            elif Path(filename).suffix == ".json":
-
-                def reader(name):
-                    return json.read(open(name))
-
-                def writer(data, name):
-                    return json.write(data, open(name, "w"))
+                def write(data, **kwargs):
+                    data.to_csv(self._filename, index=kwargs.get("index", None))
 
             else:
                 raise ValueError("File format not understood.")
 
-            self._reader = reader
-            self._writer = writer
+            self._read = read
+            self._write = write
 
         def __call__(self, computation, *args, **kwargs):
+            """call method"""
             if not disable and Path(self._filename).exists():
-                return pd.read_csv(self._filename, index_col=index_col)
-            else:
-                data = computation(*args, **kwargs)
-                data.to_csv(self._filename, index=index)
-                return data
+                return self._read(**kwargs)
+            data = computation(*args, **kwargs)
+            self._write(data, **kwargs)
+            return data
 
     yield reuse_data(filename)
