@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 import pytest
 
-from reuse import Reuse
+from pyreuse import Reuse
 
 
 DATA = Path(__file__).parent
