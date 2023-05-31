@@ -1,4 +1,5 @@
 from setuptools import find_packages, setup
+from pathlib import Path
 
 test_require = [
     "pyyaml",
@@ -13,7 +14,9 @@ setup(
     author="Alexis Arnaudon",
     author_email="alexis.arnaudon@epfl.ch",
     version="0.0.1",
-    description="",
+    description="Reuse computed datasets",
+    long_description=Path("README.md").read_text(encoding="utf-8"),
+    long_description_content_type="text/markdown",
     install_requires=[
         "pandas>=1.0.2",
     ],
