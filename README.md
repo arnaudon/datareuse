@@ -10,4 +10,4 @@ It can be used as follows:
 ```
 
 At the moment, the following file formats are available:
-    - csv (pandas)
+- csv (pandas)
