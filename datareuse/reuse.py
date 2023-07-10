@@ -1,8 +1,11 @@
 """Reuse saved dataset with contextmanager."""
 from contextlib import contextmanager
 from pathlib import Path
+import logging
 
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 @contextmanager
@@ -50,6 +53,7 @@ def Reuse(filename, disable=False, **io_kwargs):
         def __call__(self, computation, *args, **kwargs):
             """call method"""
             if not disable and Path(self._filename).exists():
+                logger.warning("Reusing %s", self._filename)
                 return self._read()
 
             data = computation(*args, **kwargs)
