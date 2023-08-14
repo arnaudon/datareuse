@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from pathlib import Path
 import logging
 
+import yaml
 import pandas as pd
 
 logger = logging.getLogger(__name__)
@@ -43,6 +44,14 @@ def Reuse(filename, disable=False, **io_kwargs):
 
                 def write(data):
                     data.to_csv(self._filename, index=self._io_kwargs.get("index", True))
+
+            elif Path(self._filename).suffix == ".yaml":
+
+                def read():
+                    return yaml.safe_load(open(self._filename, "r"))
+
+                def write(data):
+                    yaml.safe_dump(data, open(self._filename, "w"))
 
             else:
                 raise ValueError("File format not understood.")
