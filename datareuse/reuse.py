@@ -1,10 +1,10 @@
 """Reuse saved dataset with contextmanager."""
+import logging
 from contextlib import contextmanager
 from pathlib import Path
-import logging
 
-import yaml
 import pandas as pd
+import yaml
 
 logger = logging.getLogger(__name__)
 
