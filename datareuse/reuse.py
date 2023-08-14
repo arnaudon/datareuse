@@ -48,10 +48,12 @@ def Reuse(filename, disable=False, **io_kwargs):
             elif Path(self._filename).suffix == ".yaml":
 
                 def read():
-                    return yaml.safe_load(open(self._filename, "r"))
+                    with open(self._filename, "r", encoding="utf-8") as yaml_f:
+                        return yaml.safe_load(yaml_f)
 
                 def write(data):
-                    yaml.safe_dump(data, open(self._filename, "w"))
+                    with open(self._filename, "w", encoding="utf-8") as yaml_f:
+                        yaml.safe_dump(data, yaml_f)
 
             else:
                 raise ValueError("File format not understood.")
