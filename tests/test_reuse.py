@@ -48,3 +48,14 @@ def test_reuse(tmpdir):
         df6 = reuse(comp, 2)
 
     assert df5.equals(df6)
+
+    # test yaml
+    def create_dict():
+        return {"a": 123, "b": [1, 2, 3]}
+
+    with Reuse(tmpdir / "data.yaml") as reuse:
+        data_orig = reuse(create_dict)
+
+    with Reuse(DATA / "data.yaml") as reuse:
+        data_reuse = reuse(create_dict)
+    assert data_orig == data_reuse
