@@ -1,9 +1,10 @@
 """Reuse saved dataset with contextmanager."""
+import logging
 from contextlib import contextmanager
 from pathlib import Path
-import logging
 
 import pandas as pd
+import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -43,6 +44,16 @@ def Reuse(filename, disable=False, **io_kwargs):
 
                 def write(data):
                     data.to_csv(self._filename, index=self._io_kwargs.get("index", True))
+
+            elif Path(self._filename).suffix == ".yaml":
+
+                def read():
+                    with open(self._filename, "r", encoding="utf-8") as yaml_f:
+                        return yaml.safe_load(yaml_f)
+
+                def write(data):
+                    with open(self._filename, "w", encoding="utf-8") as yaml_f:
+                        yaml.safe_dump(data, yaml_f)
 
             else:
                 raise ValueError("File format not understood.")
